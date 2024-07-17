@@ -63,6 +63,12 @@ source install/local_setup.bash
 ros2 launch bringup.launch.py
 ```
 
+To visualize,
 ```bash
 rviz2 -d lidro_isl100/rviz/config_isl100.rviz
 ```
+
+## 4. Publications
+- `/lidro/image` `<sensor_msgs::msg::Image>`
+- `/lidro/points`: `<sensor_msgs::msg::PointCloud2>`
+
