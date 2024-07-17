@@ -128,7 +128,6 @@ rcl_interfaces::msg::SetParametersResult Driver::onParamUpdated(const std::vecto
 
 void Driver::initialize() {
   ambi_pub_ = this->create_publisher<sensor_msgs::msg::Image>("/lidro/image", 10);
-  intensity_pub_ = this->create_publisher<sensor_msgs::msg::Image>("/lidro/intensity", 10);
   pcl_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/lidro/points", 10);
 
   interface_ = std::make_unique<lidro::isl100::Interface>(config_);
