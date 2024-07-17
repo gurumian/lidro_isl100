@@ -16,50 +16,29 @@ public:
 
   size_t fetch(int index, uint8_t *buf, size_t len);
 
-  Eigen::Matrix<uint8_t, Eigen::Dynamic, Eigen::Dynamic> &ambient_data()
-  {
+  Eigen::Matrix<uint8_t, Eigen::Dynamic, Eigen::Dynamic> &ambient_data() {
     return *ambient_data_;
   }
 
-  Eigen::Matrix<uint16_t, Eigen::Dynamic, Eigen::Dynamic> &intensities()
-  {
+  Eigen::Matrix<uint16_t, Eigen::Dynamic, Eigen::Dynamic> &intensities() {
     return *intensities_;
   }
 
-  Eigen::Matrix<uint16_t, Eigen::Dynamic, Eigen::Dynamic> &distances()
-  {
+  Eigen::Matrix<uint16_t, Eigen::Dynamic, Eigen::Dynamic> &distances() {
     return *distances_;
   }
 
-  size_t width()
-  {
-    return width_;
-  }
+  size_t width() {return width_;}
 
-  size_t height()
-  {
-    return height_;
-  }
+  size_t height() {return height_;}
 
-  size_t ambi_height()
-  {
-    return ambi_height_;
-  }
+  size_t ambi_height() {return ambi_height_;}
 
-  uint16_t max_distance()
-  {
-    return max_distance_;
-  }
+  uint16_t max_distance() {return max_distance_;}
 
-  uint16_t max_intensity()
-  {
-    return max_intensity_;
-  }
+  uint16_t max_intensity() {return max_intensity_;}
 
-  double d8()
-  {
-    return d8_;
-  }
+  double d8() {return d8_;}
 
 private:
   size_t fetch_reflected_data(const uint8_t *buf, int frag_no, int slot_no);

@@ -173,8 +173,12 @@ int Driver::publishImage(Frame &frame) {
     }
   }
 
+  cv::Mat brighterImage;
+  int brightness = 60; // You can adjust this value to make the image as bright as needed
+  cv::add(image, cv::Scalar(brightness), brighterImage);
+
   cv::Mat smoothed;
-  cv::GaussianBlur(image, smoothed, cv::Size(5, 5), 0);
+  cv::GaussianBlur(brighterImage, smoothed, cv::Size(5, 5), 0);
 
   auto message = cv_bridge::CvImage(std_msgs::msg::Header(), "mono8", smoothed).toImageMsg();
 

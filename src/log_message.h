@@ -4,6 +4,9 @@
 // #define USE_SYSLOG
 #undef USE_SYSLOG
 
+
+// #define DEBUG
+
 #include <assert.h>
 #if !defined(USE_GLOG)
 
@@ -50,9 +53,16 @@ public:
   LogMessage(LogSeverity severity, const std::string &file, const std::string &func, int line)
   : severity_(severity), file_(basename(file.c_str())), func_(func), line_(line) {
     static auto start = std::chrono::high_resolution_clock::now();
-    stream() << "[" << severity_str[severity_] << "]"
-        << "[" << std::hex << std::setw(14) << std::setfill('0') << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << "]"
-        << "[" << std::hex <<  (uint64_t) pthread_self() << "]" << std::dec << "[" << file_ << ":" <<line_ << "] ";
+    if(severity_ == INFO) {
+      stream() << "[" << severity_str[severity_] << "]"
+      << "[" << std::hex << std::setw(14) << std::setfill('0') << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << "]"
+      << "[" << std::hex <<  (uint64_t) pthread_self() << "]";
+    }
+    else {
+      stream() << "[" << severity_str[severity_] << "]"
+      << "[" << std::hex << std::setw(14) << std::setfill('0') << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << "]"
+      << "[" << std::hex <<  (uint64_t) pthread_self() << "]" << std::dec << "[" << file_ << ":" <<line_ << "] ";
+    }
   }
 
   ~LogMessage() {

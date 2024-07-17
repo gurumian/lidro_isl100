@@ -5,7 +5,7 @@ lidro_isl100_node:
         # [2] 96×960 (~300m)
         # [3] 192×480 (~150m)
         # [4] 192×960 (~150m)
-        mode: 2 # [1, 2, 3, 4]
+        mode: 1 # [1, 2, 3, 4]
         frame_id: lidar_link
         host_addr: "192.168.1.100" #
         host_ctrl_port: 5051
