@@ -5,10 +5,6 @@
 #include <cassert>
 #include "log_message.h"
 
-
-#define LOWORD(l)   ((unsigned short)((l) & 0xffff))
-#define HIWORD(l)   ((unsigned short)(((l) >> 16) & 0xffff))
-
 namespace lidro::isl100 {
 
 Frame::Frame(stream_mode mode) 
@@ -45,23 +41,15 @@ Frame::Frame(stream_mode mode)
 
 size_t Frame::fetch_reflected_data(const uint8_t *buf, int frag_no, int slot_no) {
   auto read16 = [](uint8_t *data) -> uint16_t {
-    return (uint16_t(data[0] & 0x00ff)) | uint16_t(0xFF00 & data[1] << 8);
-  };
-
-  auto read32 = [](uint8_t *data) -> uint16_t {
-    return data[0] |
-          (data[1] << 8) |
-          (data[2] << 16) |
-          (data[3] << 24);
+    return (uint16_t(data[0]) & 0x00ff) | (uint16_t(data[1]) << 8);
   };
 
   const uint8_t *start = buf;
   const uint8_t *end = start + rflt_len_;
   const int col = frag_no * slot_packing_factor_ + slot_no;
   for(uint8_t *p = (uint8_t *)start; p < end; p+=4) {
-    uint32_t value = read32(p);
-    uint16_t distance = LOWORD(value);
-    uint16_t intensity = HIWORD(value);
+    uint16_t distance = read16(p);
+    uint16_t intensity = read16(p+2);
 
     if (intensity > max_intensity_) {
       LOG(WARNING) << "unexpected intensity: <" << intensity <<
