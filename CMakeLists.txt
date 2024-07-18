@@ -20,7 +20,6 @@ find_package(geometry_msgs REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common)
 find_package(sensor_msgs REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system)
 find_package(pcl_conversions REQUIRED)
 find_package(PCL REQUIRED)
 find_package(tf2_eigen REQUIRED)
@@ -64,12 +63,10 @@ ament_target_dependencies(${PROJECT_NAME}
   pcl_conversions
   cv_bridge
 )
-# ament_export_dependencies(Boost)
 
 target_link_libraries(
   ${PROJECT_NAME}
   lidro_input
-  ${Boost_LIBRARIES}
   ${PCL_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
