@@ -6,6 +6,7 @@
 #include "lidro/isl100/config.hpp"
 #include <memory>
 #include "lidro/isl100/udp.hpp"
+#include "lidro/isl100/simple_thread.hpp"
 
 namespace lidro::isl100 {
 
@@ -15,8 +16,8 @@ public:
   Interface(const lidro::isl100::Config &config);
   ~Interface();
 
-  void startStream();
-  void stopStream();
+  int startStream();
+  int stopStream();
 
   int sendCommand(const std::vector<uint8_t> &data);
 
@@ -26,7 +27,7 @@ public:
   void setOnFrame(OnFrame on_frame){on_frame_ = on_frame;}
 
 private:
-  void restartStream();
+  int restartStream();
   void onRead(uint8_t *buf, int len);
 
 private:
@@ -38,6 +39,8 @@ private:
 
   uint32_t sumof_frag_{0};
   uint32_t expected_sumof_frag_{0};
+
+  std::unique_ptr<base::SimpleThread> deferred_;
 };
 
 } // end namespace lidro

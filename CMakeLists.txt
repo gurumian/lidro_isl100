@@ -46,6 +46,7 @@ add_library(${PROJECT_NAME} SHARED
   src/driver.cpp
   src/interface.cpp
   src/frame.cpp
+  src/simple_thread.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}
