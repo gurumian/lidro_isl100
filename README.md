@@ -3,7 +3,7 @@ LIDRO ISL-100 ros2 driver.
 
 ## 1. Network Settings
 
-`netplan` can be an option to connect to the lidar.
+`netplan` can be used to connect to the LiDAR.
 
 #### How to install `netplan`
 ```bash
@@ -11,7 +11,7 @@ sudo apt install -y netplan.io
 ```
 
 
-It is assumed that it will be configured as follows:
+It is assumed that the configuration will be as follows:
 - Host: 192.168.1.100
 - LiDAR: 192.168.1.10
 
@@ -63,7 +63,7 @@ source install/local_setup.bash
 ros2 launch bringup.launch.py
 ```
 
-To visualize,
+To visualize the data, use:
 ```bash
 rviz2 -d lidro_isl100/rviz/config_isl100.rviz
 ```
