@@ -56,7 +56,7 @@ public:
     if(severity_ == INFO) {
       stream() << "[" << severity_str[severity_] << "]"
       << "[" << std::hex << std::setw(14) << std::setfill('0') << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << "]"
-      << "[" << std::hex <<  (uint64_t) pthread_self() << "]";
+      << "[" << std::hex <<  (uint64_t) pthread_self() << "]" << std::dec;
     }
     else {
       stream() << "[" << severity_str[severity_] << "]"
