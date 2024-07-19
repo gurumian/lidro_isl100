@@ -11,6 +11,11 @@ namespace lidro::isl100 {
 
 Interface::Interface(const lidro::isl100::Config &config) {
   int err;
+
+  deferred_ = std::make_unique<base::SimpleThread>();
+  deferred_->Init();
+  deferred_->Start();
+
   stream_mode_ = config.mode;
   ctrl_io_ = std::make_unique<net::udp>();
   ctrl_io_->setAddr(config.host_addr);
@@ -52,12 +57,14 @@ Interface::~Interface() {
   stopStream();
 }
 
-void Interface::restartStream() {
-  stopStream();
-  startStream();
+int Interface::restartStream() {
+  int err;
+  err = stopStream();
+  err = startStream();
+  return err;
 }
 
-void Interface::startStream() {
+int Interface::startStream() {
   LUTP header{};
   header.version = 0xFFEE;
   header.prod_id = 0x41A2;
@@ -83,17 +90,27 @@ void Interface::startStream() {
   }
 
   size_t n = ctrl_io_->send((uint8_t *)&header, sizeof(header));
+  if(n != sizeof(header)) {
+    LOG(ERROR) << "[REQ] failed to send the start command";
+    return -1;
+  }
   LOG(INFO) << "[REQ] start";
+  return 0;
 }
 
-void Interface::stopStream() {
+int Interface::stopStream() {
   LUTP header{};
   header.version = 0xFFEE;
   header.prod_id = 0x41A2;
   header.opaque = 0x0400;
   header.strm_type = 0x0180;
   size_t n = ctrl_io_->send((uint8_t *)&header, sizeof(header));
+  if(n != sizeof(header)) {
+    LOG(ERROR) << "[REQ] failed to send the start command";
+    return -1;
+  }
   LOG(INFO) << "[REQ] stop";
+  return 0;
 }
 
 void Interface::onRead(uint8_t *buf, int len) {
@@ -101,12 +118,12 @@ void Interface::onRead(uint8_t *buf, int len) {
   uint8_t *payload = buf + sizeof(LUTP);
   if(head->frag_no != (current_frag_no_)) {
     LOG(WARNING) << "not sync. current frag. no:" << head->frag_no << 
-    ", expected frag. no: " << current_frag_no_+1;
+    ", expected frag. no: " << current_frag_no_;
   }
 
   if(head->frag_no < (head->frag_total)) {
     if(!frame_) {
-      frame_.reset(new Frame(stream_mode_));
+      frame_ = std::make_unique<Frame>(stream_mode_);
       current_frag_no_ = 0;
       sumof_frag_ = 0;
       expected_sumof_frag_ = (head->frag_total-1)*head->frag_total / 2;
@@ -120,11 +137,16 @@ void Interface::onRead(uint8_t *buf, int len) {
     sumof_frag_ += head->frag_no;
     if(head->frag_no == (head->frag_total-1)) {
       if(on_frame_ && frame_&& (sumof_frag_ == expected_sumof_frag_)) {
-        int err = on_frame_(std::move(frame_));
+        deferred_->PostTask([&]() {
+          int err = on_frame_(std::move(frame_));
+          if(err) {
+            LOG(WARNING) << "error while processing payload";
+          }
+        });
+      }
+      else {
         frame_ = nullptr;
-        if(err) {
-          LOG(WARNING) << "error while processing payload";
-        }
+        LOG(WARNING) << "sumof_frag: " << sumof_frag_ << ", expected_sumof_frag_: " << expected_sumof_frag_;
       }
     }
   }
