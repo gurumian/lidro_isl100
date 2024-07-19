@@ -108,6 +108,8 @@ void Interface::onRead(uint8_t *buf, int len) {
     if(!frame_) {
       frame_.reset(new Frame(stream_mode_));
       current_frag_no_ = 0;
+      sumof_frag_ = 0;
+      expected_sumof_frag_ = (head->frag_total-1)*head->frag_total / 2;
     }
 
     current_frag_no_ = head->frag_no;
@@ -115,10 +117,11 @@ void Interface::onRead(uint8_t *buf, int len) {
     assert(n == head->len);
     current_frag_no_++;
     current_frag_no_ %= head->frag_total;
-
+    sumof_frag_ += head->frag_no;
     if(head->frag_no == (head->frag_total-1)) {
-      if(on_frame_ && frame_) {
+      if(on_frame_ && frame_&& (sumof_frag_ == expected_sumof_frag_)) {
         int err = on_frame_(std::move(frame_));
+        frame_ = nullptr;
         if(err) {
           LOG(WARNING) << "error while processing payload";
         }

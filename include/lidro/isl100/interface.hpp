@@ -35,6 +35,9 @@ private:
   stream_mode stream_mode_{stream_mode_1};
 
   uint32_t current_frag_no_{0};
+
+  uint32_t sumof_frag_{0};
+  uint32_t expected_sumof_frag_{0};
 };
 
 } // end namespace lidro
