@@ -40,6 +40,8 @@ public:
 
   double d8() {return d8_;}
 
+  void setMaxIntensity(int max_intensity){max_intensity_=max_intensity;};
+
 private:
   size_t fetch_reflected_data(const uint8_t *buf, int frag_no, int slot_no);
   size_t fetch_ambient_data(const uint8_t *buf, int frag_no, int slot_no);

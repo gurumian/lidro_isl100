@@ -9,7 +9,8 @@
 
 namespace lidro::isl100 {
 
-Interface::Interface(const lidro::isl100::Config &config) {
+Interface::Interface(const lidro::isl100::Config &config)
+:config_(config) {
   int err;
 
   deferred_ = std::make_unique<base::SimpleThread>();
@@ -124,6 +125,7 @@ void Interface::onRead(uint8_t *buf, int len) {
   if(head->frag_no < (head->frag_total)) {
     if(!frame_) {
       frame_ = std::make_unique<Frame>(stream_mode_);
+      if(config_.max_intensity) frame_->setMaxIntensity(config_.max_intensity);
       current_frag_no_ = 0;
       sumof_frag_ = 0;
       expected_sumof_frag_ = (head->frag_total-1)*head->frag_total / 2;

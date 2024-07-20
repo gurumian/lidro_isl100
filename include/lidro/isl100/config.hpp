@@ -25,6 +25,8 @@ struct Config {
   double frequency;
   bool publish_ambient_data;
   double min_distance;
+  double max_distance;
+  int max_intensity;
 };
 
 }
