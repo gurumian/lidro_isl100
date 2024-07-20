@@ -5,14 +5,15 @@ lidro_isl100_node:
         # [2] 96×960 (~300m)
         # [3] 192×480 (~150m)
         # [4] 192×960 (~150m)
-        mode: 1 # [1, 2, 3, 4]
+        mode: 2 # [1, 2, 3, 4]
         frame_id: lidar_link
         host_addr: "192.168.1.100" #
         host_ctrl_port: 5051
         host_data_port: 5055
         lidar_addr: "192.168.1.10"
-        lidar_ctrl_port: 1011  
+        lidar_ctrl_port: 1011
         frequency: 10.0 #(Hz)
         publish_ambient_data: true
-        min_distance: 0.5 #(m)
+        min_distance: 3.0 #(m)
         max_distance: 300.0 #(m)
+        max_intensity: 65535 # [0]: auto

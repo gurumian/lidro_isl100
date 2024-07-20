@@ -40,6 +40,7 @@ Driver::Driver(const rclcpp::NodeOptions &options): rclcpp::Node("lidro_isl100_n
   this->declare_parameter<int>("lidar_ctrl_port", 1011);
   this->declare_parameter<bool>("publish_ambient_data", false);
   this->declare_parameter<double>("min_distance", 0.0);
+  this->declare_parameter<int>("max_intensity", 0); // if 0, use system default
 
   config_.mode = (stream_mode)this->get_parameter("mode").as_int();
   config_.frame_id = this->get_parameter("frame_id").as_string();
@@ -51,6 +52,7 @@ Driver::Driver(const rclcpp::NodeOptions &options): rclcpp::Node("lidro_isl100_n
   config_.lidar_ctrl_port = this->get_parameter("lidar_ctrl_port").as_int();
   config_.publish_ambient_data = this->get_parameter("publish_ambient_data").as_bool();
   config_.min_distance = this->get_parameter("min_distance").as_double();
+  config_.max_intensity = this->get_parameter("max_intensity").as_int();
   set_param_res_ = this->add_on_set_parameters_callback(std::bind(&Driver::onParamUpdated, this, std::placeholders::_1));
 
   initialize();
@@ -112,8 +114,16 @@ rcl_interfaces::msg::SetParametersResult Driver::onParamUpdated(const std::vecto
       config_.publish_ambient_data = param.as_bool();
     }
 
+    if (param.get_name() == "max_distance") {
+      config_.max_distance = param.as_double();
+    }
+
     if (param.get_name() == "min_distance") {
       config_.min_distance = param.as_double();
+    }
+
+    if (param.get_name() == "max_intensity") {
+      config_.max_intensity = param.as_int();
     }
   }
 

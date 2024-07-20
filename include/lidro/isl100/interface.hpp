@@ -41,6 +41,7 @@ private:
   uint32_t expected_sumof_frag_{0};
 
   std::unique_ptr<base::SimpleThread> deferred_;
+  const lidro::isl100::Config &config_;
 };
 
 } // end namespace lidro
