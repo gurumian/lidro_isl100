@@ -20,7 +20,7 @@
 #include <pcl/filters/radius_outlier_removal.h>
 #include "log_message.h"
 #include <opencv2/opencv.hpp>
-#include <cv_bridge/cv_bridge.hpp>
+#include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_types.h>
